@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/editTextTaskName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Task Name"
+        />
+
+    <CheckBox
+        android:id="@+id/HighPriorityId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="High priority"/>
+
+    <CheckBox
+        android:id="@+id/MediumPriorityId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Medium priority" />
+
+    <CheckBox
+        android:id="@+id/LowPriorityId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Low priority" />
+
+    <Button
+        android:id="@+id/buttonSaveTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Task"
+        android:layout_below="@id/LowPriorityId"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
