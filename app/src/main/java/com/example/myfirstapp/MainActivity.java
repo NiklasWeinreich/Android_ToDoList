@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Deklarerer variabler til at håndtere brugerinput og knapper
     private EditText textNum1, textNum2;
     private Button buttonAdd, buttonSubtract, buttonMultiply, buttonDivide, buttonNextPage;
     private TextView textViewResult;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialiserer variablerne med deres tilsvarende views i layoutfilen
         textNum1 = findViewById(R.id.TextNum1);
         textNum2 = findViewById(R.id.TextNum2);
         buttonAdd = findViewById(R.id.buttonAdd);
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         buttonNextPage = findViewById(R.id.buttonNextPage);
         textViewResult = findViewById(R.id.textViewResult);
 
+        // Opsætter klikhændelser for hver af de matematiske operationer
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,18 +61,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Åbner SecondActivity, når knappen "Næste side" trykkes
         buttonNextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Åbner SecondActivity
                 Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
                 startActivity(intent);
             }
         });
-
-
     }
 
+    // Metode til at beregne resultatet baseret på den valgte operation
     private void calculateResult(char operation) {
         double number1 = Double.parseDouble(textNum1.getText().toString());
         double number2 = Double.parseDouble(textNum2.getText().toString());
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 result = number1 * number2;
                 break;
             case '/':
+                // Håndterer division med nul og viser en fejlmeddelelse
                 if (number2 == 0) {
                     Toast.makeText(MainActivity.this, "Kan ikke dividere med nul", Toast.LENGTH_SHORT).show();
                     return;
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
         }
 
+        // Formaterer resultatet og viser det i tekstfeltet
         String formattedResult = result % 1 == 0 ? String.valueOf((int) result) : String.valueOf(result);
         textViewResult.setText("Resultat: " + formattedResult);
     }
