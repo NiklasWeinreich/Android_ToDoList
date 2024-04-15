@@ -1,6 +1,7 @@
 package com.example.myfirstapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +45,9 @@ public class FourthActivity extends AppCompatActivity {
         // Opret en ny tom liste til opgaver
         taskList = new ArrayList<>();
 
+        // Indlæs tidligere gemte opgaver
+        loadTaskList();
+
         // Opsæt lyttere til knapperne
         setListeners();
     }
@@ -62,6 +70,8 @@ public class FourthActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     // Vis dialog til at tilføje en ny opgave
     private void showAddTaskDialog() {
@@ -100,6 +110,9 @@ public class FourthActivity extends AppCompatActivity {
                 // Sorter opgavelisten efter prioritet
                 sortTaskList();
 
+                // Tilføj opgave til layoutet
+                addTaskToList(taskName, isHighPriority, isMediumPriority, isLowPriority);
+
                 // Luk dialogen
                 dialog.dismiss();
             }
@@ -130,19 +143,9 @@ public class FourthActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // Opdater visningen af opgavelisten
-        updateTaskListUI();
     }
 
-    // Opdater visningen af opgavelisten
-    private void updateTaskListUI() {
-        taskListContainer.removeAllViews();
-        for (Task task : taskList) {
-            addTaskToList(task.getName(), task.isHighPriority(), task.isMediumPriority(), task.isLowPriority());
-        }
-    }
-
+    // Tilføj en opgave til opgavelisten
     // Tilføj en opgave til opgavelisten
     private void addTaskToList(String taskName, boolean isHighPriority, boolean isMediumPriority, boolean isLowPriority) {
         LinearLayout taskLayout = new LinearLayout(this);
@@ -168,6 +171,9 @@ public class FourthActivity extends AppCompatActivity {
                 // Flyt opgaven til "Færdige opgaver" container, når den afkrydses
                 taskListContainer.removeView(taskLayout);
                 taskListDoneContainer.addView(taskLayout);
+
+                // Gem opgavelisten
+                saveTaskList();
             }
         });
 
@@ -179,11 +185,18 @@ public class FourthActivity extends AppCompatActivity {
             // Flyt opgaven til "Færdige opgaver" container ved klik på opgaven
             taskListContainer.removeView(taskLayout);
             taskListDoneContainer.addView(taskLayout);
+
+            // Gem opgavelisten
+            saveTaskList();
         });
 
         // Tilføj opgavelayout til opgavelisten
         taskListContainer.addView(taskLayout);
+
+        // Gem opgavelisten
+        saveTaskList();
     }
+
 
     // Metode til at angive prioritetstekstfarve og -tekst ud fra prioritet
     private void setPriorityText(TextView textView, boolean isHighPriority, boolean isMediumPriority, boolean isLowPriority) {
@@ -237,6 +250,39 @@ public class FourthActivity extends AppCompatActivity {
             return lowPriority;
         }
     }
+
+    private void loadTaskList() {
+        SharedPreferences sharedPreferences = getSharedPreferences("TaskListPrefs", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("taskList", null);
+
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<Task>>() {}.getType();
+            taskList = gson.fromJson(json, type);
+
+            // Ryd layoutcontainere
+            taskListContainer.removeAllViews();
+            taskListDoneContainer.removeAllViews();
+
+            // Tilføj opgaver til layoutcontainere
+            for (Task task : taskList) {
+                addTaskToList(task.getName(), task.isHighPriority(), task.isMediumPriority(), task.isLowPriority());
+            }
+        } else {
+            taskList = new ArrayList<>(); // Opret en ny liste, hvis der ikke findes nogen gemte opgaver
+        }
+    }
+
+
+
+
+    private void saveTaskList() {
+        SharedPreferences sharedPreferences = getSharedPreferences("TaskListPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(taskList);
+        editor.putString("taskList", json);
+        editor.apply();
+    }
+
 }
-
-
