@@ -29,7 +29,7 @@ public class SecondActivity extends AppCompatActivity {
         // Starter en ny Handler, som vil starte din MainActivity efter 3 sekunder
         new Handler().postDelayed(() -> {
             // Opretter en Intent, der vil starte din hovedaktivitet
-            Intent mainIntent = new Intent(SecondActivity.this, ThirdActivity.class);
+            Intent mainIntent = new Intent(SecondActivity.this, FifthActivity.class);
             SecondActivity.this.startActivity(mainIntent);
             SecondActivity.this.finish(); // Lukker denne Activity, så brugeren ikke kan navigere tilbage til den
         }, SPLASH_DISPLAY_LENGTH);
